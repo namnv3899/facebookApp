@@ -10,6 +10,7 @@ const { JWT_SECRET } = require("../constants/constants");
 const { ROLE_CUSTOMER } = require("../constants/constants");
 const uploadFile = require("../functions/uploadFile");
 
+const path = require("path");
 const postsController = {};
 postsController.create = async (req, res, next) => {
   let userId = req.userId;
@@ -168,19 +169,19 @@ postsController.edit = async (req, res, next) => {
       images: images,
       videos: videos,
     });
-    postSaved = await PostModel.findById(postSaved._id)
-      .populate("images", ["fileName"])
-      .populate("videos", ["fileName"])
-      .populate({
-        path: "author",
-        select: "_id username phonenumber avatar",
-        model: "Users",
-        populate: {
-          path: "avatar",
-          select: "_id fileName",
-          model: "Documents",
-        },
-      });
+    postSaved = await PostModel.findById(postSaved._id);
+    // .populate("images", ["fileName"])
+    // .populate("videos", ["fileName"])
+    // .populate({
+    //   path: "author",
+    //   select: "_id username phonenumber avatar",
+    //   model: "Users",
+    //   populate: {
+    //     path: "avatar",
+    //     select: "_id fileName",
+    //     model: "Documents",
+    //   },
+    // });
     return res.status(httpStatus.OK).json({
       data: postSaved,
     });
@@ -193,8 +194,8 @@ postsController.edit = async (req, res, next) => {
 postsController.show = async (req, res, next) => {
   try {
     let post = await PostModel.findById(req.params.id)
-      .populate("images", ["fileName"])
-      .populate("videos", ["fileName"])
+      // .populate("images", ["fileName"])
+      // .populate("videos", ["fileName"])
       .populate({
         path: "author",
         select: "_id username phonenumber avatar",
@@ -248,8 +249,8 @@ postsController.list = async (req, res, next) => {
       posts = await PostModel.find({
         author: req.query.userId,
       })
-        .populate("images", ["fileName"])
-        .populate("videos", ["fileName"])
+        // .populate("images", ["fileName"])
+        // .populate("videos", ["fileName"])
         .populate({
           path: "author",
           select: "_id username phonenumber avatar",
@@ -291,19 +292,19 @@ postsController.list = async (req, res, next) => {
       // get post of friends of 1 user
       posts = await PostModel.find({
         author: listIdFriends,
-      })
-        .populate("images", ["fileName"])
-        .populate("videos", ["fileName"])
-        .populate({
-          path: "author",
-          select: "_id username phonenumber avatar",
-          model: "Users",
-          populate: {
-            path: "avatar",
-            select: "_id fileName",
-            model: "Documents",
-          },
-        });
+      });
+      // .populate("images", ["fileName"])
+      // .populate("videos", ["fileName"])
+      // .populate({
+      //   path: "author",
+      //   select: "_id username phonenumber avatar",
+      //   model: "Users",
+      //   populate: {
+      //     path: "avatar",
+      //     select: "_id fileName",
+      //     model: "Documents",
+      //   },
+      // });
     }
     let postWithIsLike = [];
     for (let i = 0; i < posts.length; i++) {
