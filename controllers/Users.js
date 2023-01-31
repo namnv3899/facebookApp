@@ -23,14 +23,11 @@ usersController.register = async (req, res, next) => {
     //Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    let avatar = await DocumentModel.findById("63a12040c2efff43d6acbd40");
-    let coverImage = await DocumentModel.findById("63a3b5b1c377b22eba339de6");
+
     user = new UserModel({
       phonenumber: phonenumber,
       password: hashedPassword,
       username: username,
-      avatar: "63a12040c2efff43d6acbd40",
-      cover_image: "60c39eb8f0b2c4268eb53366",
     });
 
     try {
@@ -52,8 +49,8 @@ usersController.register = async (req, res, next) => {
           id: savedUser._id,
           phonenumber: savedUser.phonenumber,
           username: savedUser.username,
-          avatar: avatar,
-          cover_image: coverImage,
+          // avatar: avatar,
+          // cover_image: coverImage,
         },
         token: token,
       });
@@ -120,8 +117,9 @@ usersController.edit = async (req, res, next) => {
     let userId = req.userId;
     let user;
     const { avatar, cover_image } = req.body;
+    // console.log(111, req.body);
     const dataUserUpdate = {};
-    const listPros = [
+    // const listPros = [
       "username",
       "gender",
       "birthday",
@@ -131,59 +129,61 @@ usersController.edit = async (req, res, next) => {
       "country",
       "avatar",
       "cover_image",
-    ];
-    for (let i = 0; i < listPros.length; i++) {
-      let pro = listPros[i];
-      if (req.body.hasOwnProperty(pro)) {
-        switch (pro) {
-          case "avatar":
-            let savedAvatarDocument = null;
-            if (uploadFile.matchesFileBase64(avatar) !== false) {
-              const avatarResult = uploadFile.uploadFile(avatar);
-              if (avatarResult !== false) {
-                let avatarDocument = new DocumentModel({
-                  fileName: avatarResult.fileName,
-                  fileSize: avatarResult.fileSize,
-                  type: avatarResult.type,
-                });
-                savedAvatarDocument = await avatarDocument.save();
-              }
-            } else {
-              savedAvatarDocument = await DocumentModel.findById(avatar);
-            }
-            dataUserUpdate[pro] =
-              savedAvatarDocument !== null ? savedAvatarDocument._id : null;
-            break;
-          case "cover_image":
-            let savedCoverImageDocument = null;
-            if (uploadFile.matchesFileBase64(cover_image) !== false) {
-              const coverImageResult = uploadFile.uploadFile(cover_image);
-              if (coverImageResult !== false) {
-                let coverImageDocument = new DocumentModel({
-                  fileName: coverImageResult.fileName,
-                  fileSize: coverImageResult.fileSize,
-                  type: coverImageResult.type,
-                });
-                savedCoverImageDocument = await coverImageDocument.save();
-              }
-            } else {
-              savedCoverImageDocument = await DocumentModel.findById(
-                cover_image
-              );
-            }
-            dataUserUpdate[pro] =
-              savedCoverImageDocument !== null
-                ? savedCoverImageDocument._id
-                : null;
-            break;
-          default:
-            dataUserUpdate[pro] = req.body[pro];
-            break;
-        }
-      }
-    }
+    // ];
+    // for (let i = 0; i < listPros.length; i++) {
+    //   let pro = listPros[i];
+    //   if (req.body.hasOwnProperty(pro)) {
+    //     switch (pro) {
+    //       case "avatar":
+    //         let savedAvatarDocument = null;
+    //         if (uploadFile.matchesFileBase64(avatar) !== false) {
+    //           const avatarResult = uploadFile.uploadFile(avatar);
+    //           if (avatarResult !== false) {
+    //             let avatarDocument = new DocumentModel({
+    //               fileName: avatarResult.fileName,
+    //               fileSize: avatarResult.fileSize,
+    //               type: avatarResult.type,
+    //             });
+    //             savedAvatarDocument = await avatarDocument.save();
+    //           }
+    //         } else {
+    //           savedAvatarDocument = await DocumentModel.findById(avatar);
+    //         }
+    //         dataUserUpdate[pro] =
+    //           savedAvatarDocument !== null ? savedAvatarDocument._id : null;
+    //         break;
+    //       case "cover_image":
+    //         let savedCoverImageDocument = null;
+    //         if (uploadFile.matchesFileBase64(cover_image) !== false) {
+    //           const coverImageResult = uploadFile.uploadFile(cover_image);
+    //           if (coverImageResult !== false) {
+    //             let coverImageDocument = new DocumentModel({
+    //               fileName: coverImageResult.fileName,
+    //               fileSize: coverImageResult.fileSize,
+    //               type: coverImageResult.type,
+    //             });
+    //             savedCoverImageDocument = await coverImageDocument.save();
+    //           }
+    //         } else {
+    //           savedCoverImageDocument = await DocumentModel.findById(
+    //             cover_image
+    //           );
+    //         }
+    //         dataUserUpdate[pro] =
+    //           savedCoverImageDocument !== null
+    //             ? savedCoverImageDocument._id
+    //             : null;
+    //         break;
+    //       default:
+    //         dataUserUpdate[pro] = req.body[pro];
+    //         break;
+    //     }
+    //   }
+    // }
 
-    user = await UserModel.findOneAndUpdate({ _id: userId }, dataUserUpdate, {
+
+
+    user = await UserModel.findOneAndUpdate({ _id: userId }, req.body, {
       new: true,
       runValidators: true,
     });
@@ -195,10 +195,8 @@ usersController.edit = async (req, res, next) => {
     }
     user = await UserModel.findById(userId)
       .select(
-        "phonenumber username gender birthday avatar cover_image blocked_inbox blocked_diary"
+        "phonenumber username gender birthday avatar cover_image blocked_inbox blocked_diary description city country "
       )
-      .populate("avatar")
-      .populate("cover_image");
     return res.status(httpStatus.OK).json({
       data: user,
     });
@@ -260,10 +258,10 @@ usersController.changePassword = async (req, res, next) => {
     );
     user = await UserModel.findById(userId)
       .select(
-        "phonenumber username gender birthday avatar cover_image blocked_inbox blocked_diary"
+        "phonenumber username gender birthday avatar cover_image blocked_inbox blocked_diary description city country "
       )
-      .populate("avatar")
-      .populate("cover_image");
+      // .populate("avatar")
+      // .populate("cover_image");
     return res.status(httpStatus.OK).json({
       data: user,
       token: token,
@@ -285,10 +283,10 @@ usersController.show = async (req, res, next) => {
 
     let user = await UserModel.findById(userId)
       .select(
-        "phonenumber username gender birthday avatar cover_image blocked_inbox blocked_diary description"
+        "phonenumber username gender birthday avatar cover_image blocked_inbox blocked_diary description city country "
       )
-      .populate("avatar")
-      .populate("cover_image");
+      // .populate("avatar")
+      // .populate("cover_image");
     if (user == null) {
       return res
         .status(httpStatus.NOT_FOUND)
@@ -310,8 +308,8 @@ usersController.showByPhone = async (req, res, next) => {
     let phonenumber = req.params.phonenumber;
 
     let user = await UserModel.findOne({ phonenumber: phonenumber })
-      .populate("avatar")
-      .populate("cover_image");
+      // .populate("avatar")
+      // .populate("cover_image");
     if (user == null) {
       return res
         .status(httpStatus.NOT_FOUND)
@@ -413,8 +411,8 @@ usersController.searchUser = async (req, res, next) => {
     let searchKey = new RegExp(req.body.keyword, "i");
     let result = await UserModel.find({ phonenumber: searchKey })
       .limit(10)
-      .populate("avatar")
-      .populate("cover_image")
+      // .populate("avatar")
+      // .populate("cover_image")
       .exec();
 
     res.status(200).json({
