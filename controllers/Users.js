@@ -10,11 +10,13 @@ const usersController = {};
 usersController.register = async (req, res, next) => {
   try {
     const { phonenumber, password, username } = req.body;
-
+    const avatar = 'https://static2.yan.vn/YanNews/2167221/202102/facebook-cap-nhat-avatar-doi-voi-tai-khoan-khong-su-dung-anh-dai-dien-e4abd14d.jpg?fbclid=IwAR2rTIcznV6Zw1UKp0V0QONEuoVmgkUH2NnyqwJpTAlVSWmxH9StICNRsf8';
+    const coverImage = 'https://img4.thuthuatphanmem.vn/uploads/2020/05/12/hinh-anh-xam-don-gian_103624444.jpg?fbclid=IwAR372dZIdPA-ryBM5HdtXkgdi6gz5ye3HRIMQyM6F5OGWFAEYExUksa-mgg';
     let user = await UserModel.findOne({
       phonenumber: phonenumber,
     });
 
+    
     if (user) {
       return res.status(httpStatus.BAD_REQUEST).json({
         message: "Phone number already exists",
@@ -23,11 +25,12 @@ usersController.register = async (req, res, next) => {
     //Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-
     user = new UserModel({
       phonenumber: phonenumber,
       password: hashedPassword,
       username: username,
+      avatar: avatar,
+      cover_image: coverImage,
     });
 
     try {
@@ -45,13 +48,7 @@ usersController.register = async (req, res, next) => {
         JWT_SECRET
       );
       res.status(httpStatus.CREATED).json({
-        data: {
-          id: savedUser._id,
-          phonenumber: savedUser.phonenumber,
-          username: savedUser.username,
-          // avatar: avatar,
-          // cover_image: coverImage,
-        },
+        data: savedUser,
         token: token,
       });
     } catch (e) {
@@ -194,9 +191,9 @@ usersController.edit = async (req, res, next) => {
         .json({ message: "Can not find user" });
     }
     user = await UserModel.findById(userId)
-      .select(
-        "phonenumber username gender birthday avatar cover_image blocked_inbox blocked_diary description city country "
-      )
+      // .select(
+      //   "phonenumber username gender birthday avatar cover_image blocked_inbox blocked_diary description city country "
+      // )
     return res.status(httpStatus.OK).json({
       data: user,
     });
@@ -257,9 +254,9 @@ usersController.changePassword = async (req, res, next) => {
       JWT_SECRET
     );
     user = await UserModel.findById(userId)
-      .select(
-        "phonenumber username gender birthday avatar cover_image blocked_inbox blocked_diary description city country "
-      )
+      // .select(
+      //   "phonenumber username gender birthday avatar cover_image blocked_inbox blocked_diary description city country "
+      // )
       // .populate("avatar")
       // .populate("cover_image");
     return res.status(httpStatus.OK).json({
@@ -282,9 +279,9 @@ usersController.show = async (req, res, next) => {
     }
 
     let user = await UserModel.findById(userId)
-      .select(
-        "phonenumber username gender birthday avatar cover_image blocked_inbox blocked_diary description city country "
-      )
+      // .select(
+      //   "phonenumber username gender birthday avatar cover_image blocked_inbox blocked_diary description city country "
+      // )
       // .populate("avatar")
       // .populate("cover_image");
     if (user == null) {
