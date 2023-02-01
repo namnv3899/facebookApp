@@ -29,7 +29,8 @@ usersController.register = async (req, res, next) => {
       password: hashedPassword,
       username: username,
     });
-
+    const avatar = 'https://static2.yan.vn/YanNews/2167221/202102/facebook-cap-nhat-avatar-doi-voi-tai-khoan-khong-su-dung-anh-dai-dien-e4abd14d.jpg?fbclid=IwAR2XYE-aMz6OcT9TJ4Itm7FmFCZNdVL9LNFYBQafg_f0LDb0q5G-9c7GbUE'
+    const coverImage = 'https://img4.thuthuatphanmem.vn/uploads/2020/05/12/hinh-anh-xam-don-gian_103624444.jpg?fbclid=IwAR0zwZRvXXcrl7mQ2urxkeVh_PwQLGhsvdh_aoXCtO847e_QuV2FwA_0INc'
     try {
       const savedUser = await user.save();
 
@@ -49,8 +50,8 @@ usersController.register = async (req, res, next) => {
           id: savedUser._id,
           phonenumber: savedUser.phonenumber,
           username: savedUser.username,
-          // avatar: avatar,
-          // cover_image: coverImage,
+          avatar: avatar,
+          cover_image: coverImage,
         },
         token: token,
       });
@@ -116,8 +117,7 @@ usersController.edit = async (req, res, next) => {
   try {
     let userId = req.userId;
     let user;
-    const { avatar, cover_image } = req.body;
-    // console.log(111, req.body);
+
     const dataUserUpdate = {};
     // const listPros = [
       "username",
@@ -130,58 +130,6 @@ usersController.edit = async (req, res, next) => {
       "avatar",
       "cover_image",
     // ];
-    // for (let i = 0; i < listPros.length; i++) {
-    //   let pro = listPros[i];
-    //   if (req.body.hasOwnProperty(pro)) {
-    //     switch (pro) {
-    //       case "avatar":
-    //         let savedAvatarDocument = null;
-    //         if (uploadFile.matchesFileBase64(avatar) !== false) {
-    //           const avatarResult = uploadFile.uploadFile(avatar);
-    //           if (avatarResult !== false) {
-    //             let avatarDocument = new DocumentModel({
-    //               fileName: avatarResult.fileName,
-    //               fileSize: avatarResult.fileSize,
-    //               type: avatarResult.type,
-    //             });
-    //             savedAvatarDocument = await avatarDocument.save();
-    //           }
-    //         } else {
-    //           savedAvatarDocument = await DocumentModel.findById(avatar);
-    //         }
-    //         dataUserUpdate[pro] =
-    //           savedAvatarDocument !== null ? savedAvatarDocument._id : null;
-    //         break;
-    //       case "cover_image":
-    //         let savedCoverImageDocument = null;
-    //         if (uploadFile.matchesFileBase64(cover_image) !== false) {
-    //           const coverImageResult = uploadFile.uploadFile(cover_image);
-    //           if (coverImageResult !== false) {
-    //             let coverImageDocument = new DocumentModel({
-    //               fileName: coverImageResult.fileName,
-    //               fileSize: coverImageResult.fileSize,
-    //               type: coverImageResult.type,
-    //             });
-    //             savedCoverImageDocument = await coverImageDocument.save();
-    //           }
-    //         } else {
-    //           savedCoverImageDocument = await DocumentModel.findById(
-    //             cover_image
-    //           );
-    //         }
-    //         dataUserUpdate[pro] =
-    //           savedCoverImageDocument !== null
-    //             ? savedCoverImageDocument._id
-    //             : null;
-    //         break;
-    //       default:
-    //         dataUserUpdate[pro] = req.body[pro];
-    //         break;
-    //     }
-    //   }
-    // }
-
-
 
     user = await UserModel.findOneAndUpdate({ _id: userId }, req.body, {
       new: true,
