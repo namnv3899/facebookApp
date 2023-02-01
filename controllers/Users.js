@@ -25,7 +25,7 @@ usersController.register = async (req, res, next) => {
     //Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    
+
     user = new UserModel({
       phonenumber: phonenumber,
       password: hashedPassword,
@@ -36,7 +36,7 @@ usersController.register = async (req, res, next) => {
 
     try {
       const savedUser = await user.save();
-
+      console.log(11, savedUser);
       // login for User
       // create and assign a token
       const token = jwt.sign(
@@ -118,68 +118,16 @@ usersController.edit = async (req, res, next) => {
     // console.log(111, req.body);
     const dataUserUpdate = {};
     // const listPros = [
-      "username",
-      "gender",
-      "birthday",
-      "description",
-      "address",
-      "city",
-      "country",
-      "avatar",
-      "cover_image",
+      // "username",
+      // "gender",
+      // "birthday",
+      // "description",
+      // "address",
+      // "city",
+      // "country",
+      // "avatar",
+      // "cover_image",
     // ];
-    // for (let i = 0; i < listPros.length; i++) {
-    //   let pro = listPros[i];
-    //   if (req.body.hasOwnProperty(pro)) {
-    //     switch (pro) {
-    //       case "avatar":
-    //         let savedAvatarDocument = null;
-    //         if (uploadFile.matchesFileBase64(avatar) !== false) {
-    //           const avatarResult = uploadFile.uploadFile(avatar);
-    //           if (avatarResult !== false) {
-    //             let avatarDocument = new DocumentModel({
-    //               fileName: avatarResult.fileName,
-    //               fileSize: avatarResult.fileSize,
-    //               type: avatarResult.type,
-    //             });
-    //             savedAvatarDocument = await avatarDocument.save();
-    //           }
-    //         } else {
-    //           savedAvatarDocument = await DocumentModel.findById(avatar);
-    //         }
-    //         dataUserUpdate[pro] =
-    //           savedAvatarDocument !== null ? savedAvatarDocument._id : null;
-    //         break;
-    //       case "cover_image":
-    //         let savedCoverImageDocument = null;
-    //         if (uploadFile.matchesFileBase64(cover_image) !== false) {
-    //           const coverImageResult = uploadFile.uploadFile(cover_image);
-    //           if (coverImageResult !== false) {
-    //             let coverImageDocument = new DocumentModel({
-    //               fileName: coverImageResult.fileName,
-    //               fileSize: coverImageResult.fileSize,
-    //               type: coverImageResult.type,
-    //             });
-    //             savedCoverImageDocument = await coverImageDocument.save();
-    //           }
-    //         } else {
-    //           savedCoverImageDocument = await DocumentModel.findById(
-    //             cover_image
-    //           );
-    //         }
-    //         dataUserUpdate[pro] =
-    //           savedCoverImageDocument !== null
-    //             ? savedCoverImageDocument._id
-    //             : null;
-    //         break;
-    //       default:
-    //         dataUserUpdate[pro] = req.body[pro];
-    //         break;
-    //     }
-    //   }
-    // }
-
-
 
     user = await UserModel.findOneAndUpdate({ _id: userId }, req.body, {
       new: true,
