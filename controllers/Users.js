@@ -23,11 +23,16 @@ usersController.register = async (req, res, next) => {
     //Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-
+    
+    const avatar = 'https://static2.yan.vn/YanNews/2167221/202102/facebook-cap-nhat-avatar-doi-voi-tai-khoan-khong-su-dung-anh-dai-dien-e4abd14d.jpg?fbclid=IwAR2XYE-aMz6OcT9TJ4Itm7FmFCZNdVL9LNFYBQafg_f0LDb0q5G-9c7GbUE'
+    const coverImage = 'https://img4.thuthuatphanmem.vn/uploads/2020/05/12/hinh-anh-xam-don-gian_103624444.jpg?fbclid=IwAR0zwZRvXXcrl7mQ2urxkeVh_PwQLGhsvdh_aoXCtO847e_QuV2FwA_0INc'
+    
     user = new UserModel({
       phonenumber: phonenumber,
       password: hashedPassword,
       username: username,
+      avatar: avatar,
+      cover_image: coverImage,
     });
 
     try {
