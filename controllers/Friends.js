@@ -71,7 +71,7 @@ friendsController.getRequest = async (req, res, next) => {
     try {
         let receiver = req.userId;
         let requested = await FriendModel.find({ receiver: receiver, status: "0" }).distinct('sender')
-        let users = await UserModel.find().where('_id').in(requested).populate('avatar').populate('cover_image').exec()
+        let users = await UserModel.find().where('_id').in(requested).exec()
 
         res.status(200).json({
             code: 200,
@@ -185,7 +185,7 @@ friendsController.listFriends = async (req, res, next) => {
             let requested = await FriendModel.find({ sender: req.userId, status: "1" }).distinct('receiver')
             let accepted = await FriendModel.find({ receiver: req.userId, status: "1" }).distinct('sender')
 
-            let users = await UserModel.find().where('_id').in(requested.concat(accepted)).populate('avatar').populate('cover_image').exec()
+            let users = await UserModel.find().where('_id').in(requested.concat(accepted)).exec()
 
             res.status(200).json({
                 code: 200,
@@ -218,18 +218,10 @@ friendsController.listRequests = async (req, res, next) => {
             ]
         }).populate({
             path: 'sender',
-            model: 'Users',
-            populate: {
-                path: 'avatar',
-                model: 'Documents'
-            }
+            model: 'Users'
         }).populate({
             path: 'receiver',
             model: 'Users',
-            populate: {
-                path: 'avatar',
-                model: 'Documents'
-            }
         })
 
         let sentList = [];
@@ -305,7 +297,7 @@ friendsController.friendStatus = async (req, res, next) => {
                 { status: { $in: ["0", "1"] } }
             ]
         })
-
+        console.log(222222, friendRecord);
         let status = "";
         if (friendRecord === null) {
             status = "not friend"
