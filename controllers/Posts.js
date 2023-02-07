@@ -48,7 +48,7 @@ postsController.edit = async (req, res, next) => {
 
     const { described } = req.body;
 
-    let postSaved = await PostModel.updateOne(postId, {
+    let postSaved = await PostModel.findByIdAndUpdate(postId, {
       described: described,
     });
 
