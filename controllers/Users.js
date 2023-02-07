@@ -32,12 +32,12 @@ usersController.register = async (req, res, next) => {
       username: username,
       avatar: avatar,
       cover_image: coverImage,
-      birthday: ''
+      birthday: '2000/12/12'
     });
 
     try {
       const savedUser = await user.save();
-      console.log(11, savedUser);
+      console.log(11, savedUser.birthday);
       // login for User
       // create and assign a token
       const token = jwt.sign(
@@ -99,9 +99,7 @@ usersController.login = async (req, res, next) => {
     delete user["password"];
     return res.status(httpStatus.OK).json({
       data: {
-        id: user._id,
-        phonenumber: user.phonenumber,
-        username: user.username,
+        user
       },
       token: token,
     });

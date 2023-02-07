@@ -46,11 +46,12 @@ postsController.edit = async (req, res, next) => {
         .json({ message: "Can not edit this post" });
     }
 
-    const { described, images, videos } = req.body;
+    const { described } = req.body;
 
-    let postSaved = await PostModel.findByIdAndUpdate(postId, {
+    let postSaved = await PostModel.updateOne(postId, {
       described: described,
     });
+
     postSaved = await PostModel.findById(postSaved._id);
 
     return res.status(httpStatus.OK).json({
@@ -124,11 +125,11 @@ postsController.list = async (req, res, next) => {
           path: "author",
           select: "_id username phonenumber avatar",
           model: "Users",
-          populate: {
-            path: "avatar",
-            select: "_id fileName",
-            model: "Documents",
-          },
+          // populate: {
+          //   path: "avatar",
+          //   select: "_id fileName",
+          //   model: "Documents",
+          // },
         });
     } else {
       const user = await UserModel.findById(userId);
