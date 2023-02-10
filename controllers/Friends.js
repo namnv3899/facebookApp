@@ -216,7 +216,9 @@ friendsController.suggest = async (req, res, next) => {
         let listUser = await UserModel.find().distinct('_id');
         for (const element of dataUnSuggest) {
             listUser = listUser.filter((userId) => 
-                userId.toString() != element.toString()
+                {
+                    return userId.toString() != element.toString()
+                }
             )
         }
         
