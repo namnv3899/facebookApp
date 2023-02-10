@@ -213,19 +213,13 @@ friendsController.suggest = async (req, res, next) => {
         let accepted0 = await FriendModel.find({ receiver: req.userId, status: "0" }).distinct('sender')
 
         const dataUnSuggest = [...blockUser, ...requested1, ...requested0, ...accepted1, ...accepted0, userId]
-        console.log(11111, 'dataUnSuggest', dataUnSuggest);
         let listUser = await UserModel.find().distinct('_id');
-        console.log(22222, 'listUser', listUser);
         for (const element of dataUnSuggest) {
             listUser = listUser.filter((userId) => 
-                {   
-                    return userId.toString() != element.toString()
-                }
+                userId.toString() != element.toString()
             )
-
         }
-        console.log(333333, 'listUser', listUser);
-
+        
         let listUserSuggest = await UserModel.find().where('_id').in(listUser).exec()
         
         res.status(200).json({
