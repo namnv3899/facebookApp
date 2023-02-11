@@ -203,6 +203,38 @@ friendsController.listFriends = async (req, res, next) => {
     }
 }
 
+friendsController.suggest = async (req, res, next) => {
+    try {
+        const userId  = req.userId
+        const blockUser = await UserModel.findById(userId).distinct('blocked_inbox');
+        let requested1 = await FriendModel.find({ sender: req.userId, status: "1" }).distinct('receiver')
+        let requested0 = await FriendModel.find({ sender: req.userId, status: "0" }).distinct('receiver')
+        let accepted1 = await FriendModel.find({ receiver: req.userId, status: "1" }).distinct('sender')
+        let accepted0 = await FriendModel.find({ receiver: req.userId, status: "0" }).distinct('sender')
+
+        const dataUnSuggest = [...blockUser, ...requested1, ...requested0, ...accepted1, ...accepted0, userId]
+        let listUser = await UserModel.find().distinct('_id');
+        for (const element of dataUnSuggest) {
+            listUser = listUser.filter((userId) => 
+                {
+                    return userId.toString() != element.toString()
+                }
+            )
+        }
+        
+        let listUserSuggest = await UserModel.find().where('_id').in(listUser).exec()
+        
+        res.status(200).json({
+            code: 200,
+            message: "Danh gợi ý bạn bè",
+            data: {
+                listUserSuggest,
+            }
+        });
+    } catch (error) {
+        
+    }
+}
 
 friendsController.listRequests = async (req, res, next) => {
     try {
