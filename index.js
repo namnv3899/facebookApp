@@ -3,7 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const mainRouter = require("./routes/index");
-const { PORT } = require("./constants/constants");
+const { PORT, PORTSERVER } = require("./constants/constants");
 const { MONGO_URI } = require("./constants/constants");
 const bodyParser = require("body-parser");
 const app = express();
@@ -49,8 +49,8 @@ app.get("/settings", function (req, res) {
   res.send("Settings Page");
 });
 
-app.listen(8000, () => {
-  console.log("server start - " + 8000);
+app.listen(PORTSERVER, () => {
+  console.log("server start - " + PORTSERVER);
 });
 
 var socketIds = {};
