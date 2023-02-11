@@ -141,6 +141,11 @@ chatController.getChats = async (req, res, next) => {
             path: 'members',
             model: 'Users',
         });
+        if (!chats) {
+            return res.status(httpStatus.NOT_FOUND).json({
+                message: 'Chua co doan chat nao ca'
+            });
+        }
         let results = [];
         for (let i = 0; i < chats.length; i++) {
             let res = {

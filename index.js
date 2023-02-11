@@ -98,7 +98,8 @@ io.on("connection", (socket) => {
   });
   socket.on("chatmessage", async (msg) => {
     console.log(msg)
-    console.log(msg.token)
+    console.log('receiverId', msg.receiverId)
+    console.log('token', msg.token)
     if (msg.token && msg.receiverId) {
       try {
         decoded = jwt.verify(msg.token, process.env.JWT_SECRET);
@@ -107,19 +108,27 @@ io.on("connection", (socket) => {
         delete msg.token;
         msg.time = new Date();
         data = await chatController.saveMessage(msg);
+        console.log('saveMessage', data);
         if (data !== null) {
           msg.chatId = data.chatId;
           msg._id = data.msgId;
-          if (socketIds[msg.senderId]) {
-            for (let i = 0; i < socketIds[msg.senderId].length; i++) {
-              io.to(socketIds[msg.senderId][i]).emit("message", msg);
-            }
-          }
-          if (socketIds[msg.receiverId]) {
-            for (let i = 0; i < socketIds[msg.receiverId].length; i++) {
-              io.to(socketIds[msg.receiverId][i]).emit("message", msg);
-            }
-          }
+          io.to(`${msg.senderId}`).emit("message", msg);
+          // if (socketIds[msg.senderId]) {
+          //   for (let i = 0; i < socketIds[msg.senderId].length; i++) {
+          //     console.log('emit senderId:', msg);
+          //     io.to(`${msg.senderId}`).emit("message", msg);
+          //   }
+          // }
+          // io.emit("message", msg);
+          io.emit(`${msg.receiverId}`, msg);
+          io.to(`${msg.receiverId}`).emit("message", msg);
+          
+          // if (socketIds[msg.receiverId]) {
+          //   for (let i = 0; i < socketIds[msg.receiverId].length; i++) {
+
+          //     io.to(socketIds[msg.receiverId][i]).emit("message", msg);
+          //   }
+          // }
         }
       } catch (e) {
         console.log(e);
