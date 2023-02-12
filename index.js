@@ -49,8 +49,8 @@ app.get("/settings", function (req, res) {
   res.send("Settings Page");
 });
 
-app.listen(PORT, () => {
-  console.log("server start - " + PORT);
+app.listen(PORTSERVER, () => {
+  console.log("server start - " + PORTSERVER);
 });
 
 var socketIds = {};
@@ -212,6 +212,6 @@ io.on("connection", (socket) => {
   });
 });
 
-chatServer.listen(PORTSERVER, () => {
-  console.log("server chat start - " + PORTSERVER);
+chatServer.listen(PORT, () => {
+  console.log("server chat start - " + PORT);
 });
