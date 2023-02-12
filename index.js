@@ -110,14 +110,15 @@ io.on("connection", (socket) => {
         delete msg.token;
         msg.time = new Date();
         data = await chatController.saveMessage(msg);
-        console.log('saveMessage', data);
+        
+        console.log('saveMessage', msg.time, data);
         if (data !== null) {
           msg.chatId = data.chatId;
           msg._id = data.msgId;
           io.to(`${msg.senderId}`).emit("message", msg);
 
           room = msg.receiverId
-
+          
           io.emit(`${msg.receiverId}`, msg);
           
           io.to(`${msg.receiverId}`).emit("message", msg);
