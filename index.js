@@ -100,7 +100,7 @@ io.on("connection", (socket) => {
   socket.on("chatmessage", async (msg) => {
     console.log(msg)
     console.log('receiverId', msg.receiverId)
-    console.log('token', msg.token)
+    console.log('token',new Date(), msg.token)
     if (msg.token && msg.receiverId) {
       try {
         console.log(9999, process.env.JWT_SECRET);
