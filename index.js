@@ -127,7 +127,9 @@ io.on("connection", (socket) => {
           
           io.to(`${msg.receiverId}`).emit("message", msg);
           
-
+          // io.on(room, (msg) => {
+          //   console.log(123123, 'recive:', msg);
+          // })
           // if (socketIds[msg.receiverId]) {
           //   for (let i = 0; i < socketIds[msg.receiverId].length; i++) {
 
@@ -142,9 +144,9 @@ io.on("connection", (socket) => {
   });
 
   // socket.join(room)
-  // socket.on(room, (msg) => {
-  //   console.log(123123, 'recive:', msg);
-  // });
+  socket.on(room, (msg) => {
+    console.log(123123, 'recive:', msg);
+  });
   socket.on("blockers", async (msg) => {
     // console.log(msg.token)
     if (msg.token && msg.receiverId) {
