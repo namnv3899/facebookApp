@@ -115,27 +115,13 @@ io.on("connection", (socket) => {
           msg.chatId = data.chatId;
           msg._id = data.msgId;
           io.to(`${msg.senderId}`).emit("message", msg);
-          // if (socketIds[msg.senderId]) {
-          //   for (let i = 0; i < socketIds[msg.senderId].length; i++) {
-          //     console.log('emit senderId:', msg);
-          //     io.to(`${msg.senderId}`).emit("message", msg);
-          //   }
-          // }
-          // io.emit("message", msg);
+
           room = msg.receiverId
+
           io.emit(`${msg.receiverId}`, msg);
           
           io.to(`${msg.receiverId}`).emit("message", msg);
           
-          // io.on(room, (msg) => {
-          //   console.log(123123, 'recive:', msg);
-          // })
-          // if (socketIds[msg.receiverId]) {
-          //   for (let i = 0; i < socketIds[msg.receiverId].length; i++) {
-
-          //     io.to(socketIds[msg.receiverId][i]).emit("message", msg);
-          //   }
-          // }
         }
       } catch (e) {
         console.log(e);
@@ -143,10 +129,17 @@ io.on("connection", (socket) => {
     }
   });
 
+  // const receiverId = "63e2056499e821002b22e06b"
+  // socket.on(receiverId, (arg) => {
+  //   console.log(arg); // world
+  // });
+
+
   // socket.join(room)
   socket.on(room, (msg) => {
     console.log(123123, 'recive:', msg);
   });
+
   socket.on("blockers", async (msg) => {
     // console.log(msg.token)
     if (msg.token && msg.receiverId) {
