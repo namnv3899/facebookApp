@@ -28,6 +28,7 @@ const MONGO_URI = process.env.MONGO_URI;
 const PORT = process.env.PORT;
 const PORTSERVER = process.env.PORTSERVER
 module.exports = {
+    PORTSERVER,
     GENDER_MALE,
     GENDER_FEMALE,
     GENDER_SECRET,
