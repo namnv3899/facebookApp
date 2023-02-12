@@ -96,12 +96,14 @@ io.on("connection", (socket) => {
 
     // console.log(socketIds[userId])
   });
+  let room = ''
   socket.on("chatmessage", async (msg) => {
     console.log(msg)
     console.log('receiverId', msg.receiverId)
     console.log('token', msg.token)
     if (msg.token && msg.receiverId) {
       try {
+        console.log(9999, process.env.JWT_SECRET);
         decoded = jwt.verify(msg.token, process.env.JWT_SECRET);
         console.log({decoded})
         msg.senderId = decoded.id;
@@ -120,9 +122,12 @@ io.on("connection", (socket) => {
           //   }
           // }
           // io.emit("message", msg);
+          room = msg.receiverId
           io.emit(`${msg.receiverId}`, msg);
+          
           io.to(`${msg.receiverId}`).emit("message", msg);
           
+
           // if (socketIds[msg.receiverId]) {
           //   for (let i = 0; i < socketIds[msg.receiverId].length; i++) {
 
@@ -136,6 +141,10 @@ io.on("connection", (socket) => {
     }
   });
 
+  // socket.join(room)
+  // socket.on(room, (msg) => {
+  //   console.log(123123, 'recive:', msg);
+  // });
   socket.on("blockers", async (msg) => {
     // console.log(msg.token)
     if (msg.token && msg.receiverId) {
