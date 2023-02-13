@@ -121,7 +121,7 @@ io.on("connection", (socket) => {
           console.log(msg.receiverId);
           io.emit(`${msg.receiverId}`, msg);
           
-          // io.to(`${msg.receiverId}`).emit("message", msg);
+          io.to(`${msg.receiverId}`).emit("message", msg);
           
         }
       } catch (e) {
