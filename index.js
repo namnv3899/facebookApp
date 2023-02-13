@@ -115,13 +115,13 @@ io.on("connection", (socket) => {
         if (data !== null) {
           msg.chatId = data.chatId;
           msg._id = data.msgId;
-          io.to(`${msg.senderId}`).emit("message", msg);
+          // io.to(`${msg.senderId}`).emit("message", msg);
 
           room = msg.receiverId
-          
+          console.log(msg.receiverId);
           io.emit(`${msg.receiverId}`, msg);
           
-          io.to(`${msg.receiverId}`).emit("message", msg);
+          // io.to(`${msg.receiverId}`).emit("message", msg);
           
         }
       } catch (e) {
