@@ -62,7 +62,7 @@ io.on("connection", (socket) => {
   //     socket.emit('output-messages', result)
   // })
   // console.log('a user connected: ', socket.id);
-  console.log(1111, 'socket.id', socket.id);
+  console.log(new Date(), ':', 'socket.id:', socket.id);
   if (socket.handshake.headers.token) {
     try {
       decoded = jwt.verify(
